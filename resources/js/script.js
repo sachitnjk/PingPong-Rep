@@ -61,6 +61,17 @@ const ball = {
 // --------- DRAW FUNCTIONS ----------//
 /*------------------------------------*/
 
+function startGame(){
+    let startDiv = document.getElementById("start");
+    let gameCanvas = document.getElementById("pong");
+    let gameOver = document.getElementById("gameOver");
+    startDiv.style.display = "none";
+    gameCanvas.style.display = "block";
+    gameOver.style.display = "none";
+    start();
+    
+}
+
 
 
 function drawRect(x, y, w, h, color){
@@ -149,10 +160,8 @@ function update() {
         
         let direction = (ball.x < canvas.width/2) ? 1 : -1;
         ball.velocityX = direction * ball.speed*Math.cos(angleRad);
-        //xDebug = canvas.width/2 + direction*Math.cos(angleRad) * ball.speed;
-        //ball.velocityX = -ball.velocityX;
         ball.velocityY = ball.speed*Math.sin(angleRad);
-        //yDebug = canvas.height/2 + Math.sin(angleRad)* ball.speed;
+        
         
         console.log(ball.speed); 
         ball.speed += 0.1;   
@@ -174,8 +183,7 @@ function update() {
 
 // --------- RENDER FUNCTION ---------//
 
-//let xDebug = 0;
-//let yDebug = 0;
+
 
 
 function render (){
@@ -186,7 +194,7 @@ function render (){
     drawRect(user.x, user.y, user.width, user.height, user.color);
     drawRect(comp.x, comp.y, comp.width, comp.height, comp.color);
     drawCircle(ball.x, ball.y, ball.r, ball.color);
-    //drawCircle(xDebug, yDebug, ball.r, ball.color);
+    
 }
 
 
@@ -197,7 +205,10 @@ function game(){
 
 const framePerSecond = 50;
 
-setInterval(game, 1000/framePerSecond);
+function start() {
+    setInterval(game, 1000/framePerSecond);
+}
+
 
 //------ DRAW SCORE -------//
 
