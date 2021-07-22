@@ -52,7 +52,7 @@ const ball = {
     r: 10,
     velocityX : 5,
     velocityY : 5,
-    speed: 5,
+    speed: 10,
     color: "WHITE"
 }
 
@@ -128,7 +128,7 @@ function collison(ball, player) {
 function resetBall(){
     ball.x = canvas.width/2;
     ball.y = canvas.height/2;
-    ball.speed = 5;
+    ball.speed = 10;
     ball.velocityX = -ball.velocityX;
     
 }
