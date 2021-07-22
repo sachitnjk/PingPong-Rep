@@ -52,6 +52,7 @@ const ball = {
     r: 10,
     velocityX : 5,
     velocityY : 5,
+    speed: 10,
     color: "WHITE"
 }
 
@@ -59,6 +60,17 @@ const ball = {
 /*------------------------------------*/
 // --------- DRAW FUNCTIONS ----------//
 /*------------------------------------*/
+
+function startGame(){
+    let startDiv = document.getElementById("start");
+    let gameCanvas = document.getElementById("pong");
+    let gameOver = document.getElementById("gameOver");
+    startDiv.style.display = "none";
+    gameCanvas.style.display = "block";
+    gameOver.style.display = "none";
+    start();
+    
+}
 
 
 
@@ -90,6 +102,15 @@ function drawNet() {
     }
 }
 
+
+canvas.addEventListener("mousemove",movePaddle);
+
+function movePaddle(evt) {
+    let rect = canvas.getBoundingClientRect();
+    user.y = evt.clientY - rect.top - user.height/2;
+}
+
+
 function collison(ball, player) {
     player.top = player.y;
     player.bottom = player.y + player.height;
@@ -104,26 +125,65 @@ function collison(ball, player) {
     return ball.right > player.left && ball.top < player.bottom && ball.left < player.right && ball.bottom > player.top;
 }
 
+function resetBall(){
+    ball.x = canvas.width/2;
+    ball.y = canvas.height/2;
+    ball.speed = 10;
+    ball.velocityX = -ball.velocityX;
+    
+}
 
 function update() {
+    
+    //assigning velocity to ball
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
+    
+    //comp AI
+    comp.y += (ball.y - (comp.y + comp.height/2)) * 0.1;
+    
+    //Inversing velocity when ball hits top/bottom
     if( ball.y + ball.r > canvas.height ||
         ball.y - ball.r < 0) {
-        ball.velocityY = -ball.velocityY
+        ball.velocityY = -ball.velocityY;
     }
+    
     
     let player = (ball.x < canvas.width/2)?user:comp;
     
-    if(collison(ball, player)){
+    if(collison(ball,player)){
+
         let collidePoint = (ball.y - (player.y + player.height/2));
-        collidePoint = collidePoint / (player.height/2);
+        collidePoint = collidePoint/(player.height/2);
         
+        let angleRad = collidePoint * Math.PI/4;
+        
+        let direction = (ball.x < canvas.width/2) ? 1 : -1;
+        ball.velocityX = direction * ball.speed*Math.cos(angleRad);
+        ball.velocityY = ball.speed*Math.sin(angleRad);
+        
+        
+        console.log(ball.speed); 
+        ball.speed += 0.1;   
+    }
+    
+
+    
+    if (ball.x - ball.r < 0) {
+        comp.score++;
+        resetBall();
+    } else if (ball.x + ball.r > canvas.width) {
+        user.score++;
+        resetBall();
     }
     
 }
 
+
+
 // --------- RENDER FUNCTION ---------//
+
+
 
 
 function render (){
@@ -134,7 +194,7 @@ function render (){
     drawRect(user.x, user.y, user.width, user.height, user.color);
     drawRect(comp.x, comp.y, comp.width, comp.height, comp.color);
     drawCircle(ball.x, ball.y, ball.r, ball.color);
-    rectx = rectx + 100;
+    
 }
 
 
@@ -145,14 +205,17 @@ function game(){
 
 const framePerSecond = 50;
 
-setInterval(game, 1000/framePerSecond);
+function start() {
+    setInterval(game, 1000/framePerSecond);
+}
+
 
 //------ DRAW SCORE -------//
 
 
 
 
-
+// NEW COMMENT
 
 
 
